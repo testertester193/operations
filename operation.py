@@ -18,7 +18,7 @@ batteries = [
 # Dash App
 external_stylesheets = ["https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"]
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
-
+server = app.server
 app.layout = html.Div(style={'backgroundColor': '#2E2E2E', 'minHeight': '100vh', 'padding': '20px'}, children=[
     # Header Section with Logo
     html.Div([
