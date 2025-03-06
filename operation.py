@@ -17,7 +17,7 @@ batteries = [
 
 # Dash App
 external_stylesheets = ["https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"]
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.layout = html.Div(style={'backgroundColor': '#2E2E2E', 'minHeight': '100vh', 'padding': '20px'}, children=[
     # Header Section with Logo
@@ -30,7 +30,7 @@ app.layout = html.Div(style={'backgroundColor': '#2E2E2E', 'minHeight': '100vh',
                 html.Div([
                     html.Ul([
                         html.Li(html.A("Logout", id="logout-button", className="waves-effect waves-light btn red darken-3"))
-                    ], className="right")
+                    ], className="right", id="logout-container", style={"display": "none"})
                 ], style={"flex": "1", "textAlign": "right"})
             ], style={"display": "flex", "alignItems": "center", "width": "100%"})
         ], className="nav-wrapper blue darken-3")
@@ -58,7 +58,7 @@ app.layout = html.Div(style={'backgroundColor': '#2E2E2E', 'minHeight': '100vh',
                 dcc.Input(id='search-bar', type='text', placeholder='Search battery...', className="validate", debounce=True)
             ]),
             
-             # Battery Selection
+            # Battery Selection
             html.Div(id='battery-container', className="row center-align", children=[
                 html.Button("Battery A", id='battery-a', n_clicks=0, className="btn waves-effect waves-light green" if batteries[0]['status'] == 'healthy' else "btn waves-effect waves-light red"),
                 html.Button("Battery B", id='battery-b', n_clicks=0, className="btn waves-effect waves-light green" if batteries[1]['status'] == 'healthy' else "btn waves-effect waves-light red")
@@ -81,16 +81,16 @@ app.layout = html.Div(style={'backgroundColor': '#2E2E2E', 'minHeight': '100vh',
 ])
 
 @app.callback(
-    [Output('dashboard', 'style'), Output('login-screen', 'style')],
+    [Output('dashboard', 'style'), Output('login-screen', 'style'), Output('logout-container', 'style')],
     [Input('login-button', 'n_clicks'), Input('logout-button', 'n_clicks')],
     [State('username', 'value'), State('password', 'value')]
 )
 def login_logout(n_clicks, logout_clicks, username, password):
     if ctx.triggered_id == 'login-button' and username == "admin" and password == "password":
-        return {'display': 'block'}, {'display': 'none'}
+        return {'display': 'block'}, {'display': 'none'}, {'display': 'block'}
     elif ctx.triggered_id == 'logout-button':
-        return {'display': 'none'}, {'display': 'block'}
-    return {'display': 'none'}, {'display': 'block'}
+        return {'display': 'none'}, {'display': 'block'}, {'display': 'none'}
+    return {'display': 'none'}, {'display': 'block'}, {'display': 'none'}
 
 @app.callback(
     [Output('best-hours', 'children'), Output('normal-hours', 'children'), Output('worst-hours', 'children'),
